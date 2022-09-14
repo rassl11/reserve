@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "543925608852",
+    "project_id": "timekeeper-reserve",
+    "storage_bucket": "timekeeper-reserve.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543925608852:android:6fa8b206257e180d086f81",
+        "android_client_info": {
+          "package_name": "com.example.tkbooking111"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543925608852-lv5tg3v9aqj222hj2ijpjibhnf9p3n8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRGaddPEycDTG0tOwpyWsp0XmFa8HgzgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543925608852-lv5tg3v9aqj222hj2ijpjibhnf9p3n8a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543925608852-ial1v3d2mpkcocfpf6p4vfu9tc2qq0df.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tkbooking111"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

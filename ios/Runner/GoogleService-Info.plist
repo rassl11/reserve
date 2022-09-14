@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>543925608852-ial1v3d2mpkcocfpf6p4vfu9tc2qq0df.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.543925608852-ial1v3d2mpkcocfpf6p4vfu9tc2qq0df</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCdrx3zkM_0DUe_kQDd3Q8NvcJMRJ7dvO0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>543925608852</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.tkbooking111</string>
+	<key>PROJECT_ID</key>
+	<string>timekeeper-reserve</string>
+	<key>STORAGE_BUCKET</key>
+	<string>timekeeper-reserve.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:543925608852:ios:caedc77adbc12e49086f81</string>
+</dict>
+</plist>
