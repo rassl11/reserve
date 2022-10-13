@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tkbooking111/src/utilities/func.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../main.dart';
-import '../utilities/colors.dart';
+import '../utilities/funcAndData.dart';
+import '../screens/update_page.dart';
 
 class bookingsBody extends StatefulWidget {
   const bookingsBody({required this.filial});
   final String filial;
 
   @override
-  State<bookingsBody> createState() => _bookingsBodyState(filial: filial);
+  State<bookingsBody> createState() => _bookingsBodyState();
 }
 
 class _bookingsBodyState extends State<bookingsBody> {
-  _bookingsBodyState({required this.filial});
-  String filial;
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        setState(() {});
+        setState(() {
+        });
       },
       child: StreamBuilder(
-        stream: Func.returnData(filial).orderBy('created_date', descending: true).snapshots(),
+        stream: DataBase.db
+            .collection('Reserve')
+            .doc(Func.returnDataNow())
+            .collection(Func.returnSubcollection(widget.filial))
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           print(!snapshot.hasData || snapshot.data!.docs.isEmpty);
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -45,13 +46,34 @@ class _bookingsBodyState extends State<bookingsBody> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${snapshot.data?.docs[index].get('name')}, ${snapshot.data?.docs[index].get('time')}',
-                            style:
-                                TextStyle(fontSize: 30.sp, color: ColorsUtils.whiteColor),
-                          ),
-                          SizedBox(
-                            height: 15.h,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${snapshot.data?.docs[index].get('name')}, ${snapshot.data?.docs[index].get('arrival time')}',
+                                style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: ColorsUtils.whiteColor),
+                              ),
+                              Container(
+                                width: 60,
+                                height: 60,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image:
+                                        AssetImage("assets/img/bg-tiime.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                child: Text(
+                                    '${snapshot.data?.docs[index].get('number table')}',
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        color: ColorsUtils.darkgreenColor)),
+                              ),
+                            ],
                           ),
                           getTextFiled(
                             text:
@@ -67,66 +89,69 @@ class _bookingsBodyState extends State<bookingsBody> {
                                   EdgeInsets.all(0)),
                             ),
                             child: Text(
-                                '${snapshot.data?.docs[index].get('number')}',
+                                '${snapshot.data?.docs[index].get('phone number')}',
                                 style: TextStyle(
-                                    fontSize: 24.sp,
+                                    fontSize: 22.sp,
                                     color: ColorsUtils.whiteColor,
                                     fontWeight: FontWeight.normal)),
                           ),
-                          getTextFiled(
-                            text:
-                                'Стол: ${snapshot.data?.docs[index].get('numberTable')}',
-                          ),
                           SizedBox(
-                            height: 20.h,
+                            height: 15.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width: 150.w,
-                                height: 40.h,
+                                height: 35.h,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Func.returnData(filial)
-                                        .doc(snapshot.data!.docs[index].id)
-                                        .delete();
+                                    String collectionName = 'Archive';
+                                    moveDocumentToOtherCollection(
+                                        snapshot.data!.docs[index].id,
+                                        collectionName);
                                   },
-                                  child: Text(
-                                    'Подтвердить',
-                                    style: TextStyle(fontSize: 18.sp),
-                                  ),
+                                  child: Icon(Icons.check),
                                 ),
                               ),
                               Container(
-                                height: 40.h,
+                                height: 35.h,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      String collectionName = 'Did not come';
+                                      moveDocumentToOtherCollection(
+                                          snapshot.data!.docs[index].id,
+                                          collectionName);
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                        Colors.red,
+                                      ),
+                                    ),
+                                    child: Icon(Icons.close)),
+                              ),
+                              Container(
+                                height: 35.h,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Func.returnData(filial)
-                                        .doc(snapshot.data!.docs[index].id)
-                                        .delete();
-                                    Future<QuerySnapshot> books = Func.returnData(filial)
-                                        .doc(snapshot.data!.docs[index].id)
-                                        .collection(Func.returnSubcollection(filial))
-                                        .get();
-                                    books.then((value) {
-                                      value.docs.forEach((element) {
-                                        Func.returnData(filial)
-                                            .doc(snapshot.data!.docs[index].id)
-                                            .collection(Func.returnSubcollection(filial))
-                                            .doc(element.id)
-                                            .delete()
-                                            .then((value) => print("success"));
-                                      });
-                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => UserUpdate(
+                                            snapshotId:
+                                                snapshot.data!.docs[index].id,
+                                            filial: widget.filial,
+                                          ),
+                                          maintainState: false,
+                                        ));
                                   },
                                   style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
-                                      Colors.red,
+                                      Colors.grey,
                                     ),
                                   ),
-                                  child: Icon(Icons.delete),
+                                  child: Icon(Icons.edit),
                                 ),
                               ),
                             ],
@@ -144,13 +169,62 @@ class _bookingsBodyState extends State<bookingsBody> {
     );
   }
 
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launchUrl(launchUri);
+  moveDocumentToOtherCollection(snapshotId, collectionName) async {
+    var oldColl = DataBase.db
+        .collection('Reserve')
+        .doc(Func.returnDataNow())
+        .collection(Func.returnSubcollection(widget.filial))
+        .doc(snapshotId);
+    var newColl = DataBase.db
+        .collection(collectionName)
+        .doc(Func.returnDataNow())
+        .collection(Func.returnSubcollection(widget.filial))
+        .doc(oldColl.id);
+
+    DocumentSnapshot? snapshot = await oldColl.get()
+        // ignore: missing_return
+        .then((docSnapshot) {
+      if (docSnapshot.exists) {
+        // document id does exist
+        print('Successfully found document');
+
+        newColl
+            .set({
+              'name': docSnapshot['name'],
+              'phone number': docSnapshot['phone number'],
+              'arrival time': docSnapshot['arrival time'],
+              'count': docSnapshot['count'],
+              'number table': docSnapshot['number table'],
+              'date': docSnapshot['date'],
+              'created date': docSnapshot['created date'],
+              'employeeID': docSnapshot['employeeID'],
+            })
+            .then((value) => print("document moved to different collection"))
+            .catchError((error) => print("Failed to move document: $error"))
+            .then((value) => ({
+                  oldColl
+                      .delete()
+                      .then((value) =>
+                          print("document removed from old collection"))
+                      .catchError((error) {
+                    newColl.delete();
+                    print("Failed to delete document: $error");
+                  })
+                }));
+      } else {
+        //document id doesnt exist
+        print('Failed to find document id');
+      }
+    });
   }
+}
+
+Future<void> _makePhoneCall(String phoneNumber) async {
+  final Uri launchUri = Uri(
+    scheme: 'tel',
+    path: phoneNumber,
+  );
+  await launchUrl(launchUri);
 }
 
 Widget textNoBooked() {
@@ -163,5 +237,6 @@ Widget textNoBooked() {
 }
 
 Widget getTextFiled({required String text}) {
-  return Text(text, style: TextStyle(fontSize: 24.sp, color: ColorsUtils.whiteColor));
+  return Text(text,
+      style: TextStyle(fontSize: 22.sp, color: ColorsUtils.whiteColor));
 }
